@@ -20,24 +20,29 @@
     </form>
     
     <?php
-    //input
-    $nazev = $_POST['novyNazev'];
-    //$soubor = $_POST['soubor'];
-    echo'<pre>';
-   // echo var_dump($_FILES);
+        echo'<pre>';
+        echo var_dump($_FILES);
 
-    $filename = $_FILES['soubor']['name'];
-    $ext = pathinfo($filename, PATHINFO_EXTENSION);
-    $allowed = array('jpg','png','gif');
-    if( ! in_array( $ext, $allowed ) ) {
-        echo 'error';
-    }
-    echo($ext);
-    
-    if(isset($_FILES['soubor'])){//hlidani zda byl soubor skutecne nahran
-        move_uploaded_file($_FILES['soubor']['tmp_name'], $nazev.'.jpg'); //nutnost nahrat obrazek, jinak je docasne ulozeny na serveru v adrese pod tmp_name
-    }
 
+        $nazev = $_POST['novyNazev'];
+        if (empty($nazev)){
+            $nazev = $_FILES['soubor']['name'];
+        }else{
+            $nazev = $_POST['novyNazev'.'.jpg'];
+        }
+        
+        
+        //kontrola, zda soubour je obrázek
+        $filename = $_FILES['soubor']['name'];
+        $ext = pathinfo($filename, PATHINFO_EXTENSION);
+        $allowed = array('jpg','png','gif', 'JPG', 'PNG', 'GIF');
+        if( ! in_array( $ext, $allowed ) ) {
+            echo 'Chybný formát. Akceptováno je JPG, GIF, PNG.';
+        }else{//pokud je obrazek, ulozi se pod zadaným názvem
+            if(isset($_FILES['soubor'])){
+                move_uploaded_file($_FILES['soubor']['tmp_name'], $nazev);
+            } 
+        }
 
     ?>
 </body>
